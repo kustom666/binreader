@@ -6,10 +6,16 @@
 #include <QFileDialog>
 #include <QList>
 #include <QMainWindow>
+#include <QScrollArea>
+#include <QSplitter>
+#include <QTreeWidget>
+
+#include <QFormLayout>
 
 #include "cparseurxml.h"
 #include "cregleparsage.h"
 #include "cimportexport.h"
+#include "cdebugconsole.h"
 
 namespace Ui {
 class MainFen;
@@ -25,16 +31,25 @@ public:
 
 public slots:
     void OuvrirDescripteur();
-
-private:
-    void ConnectSignaux();
     void OuvrirBinaire();
 
 private:
-    Ui::MainFen *ui;
-    CParseurXml mParseurXml;
+    void ConnectSignaux();
+    void AfficherGui();
+    void ClearListeParsage(QList<CRegleParsage *> *aListe);
 
+private:
+    Ui::MainFen *ui;
+    QSplitter *mSplitter;
+    QFormLayout *mMainLayout;
+    QScrollArea *mScroll;
+    QTreeWidget *mTree;
+    CParseurXml mParseurXml;
     QList<CRegleParsage *> *listeParsage;
+    CImportExport *mImportExport;
+    CDebugConsole *mConsoleDebug;
+    QList<CChampBinaire *> *mBinaires;
+
 };
 
 #endif // MAINFEN_H

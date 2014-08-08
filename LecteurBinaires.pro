@@ -17,12 +17,20 @@ SOURCES += main.cpp\
     cparseurxml.cpp \
     cregleparsage.cpp \
     cimportexport.cpp \
-    cchampbinaire.cpp
+    cchampbinaire.cpp \
+    cdebugconsole.cpp \
+    parsingthread.cpp
 
 HEADERS  += mainfen.h \
     cparseurxml.h \
     cregleparsage.h \
     cimportexport.h \
-    cchampbinaire.h
+    cchampbinaire.h \
+    cdebugconsole.h \
+    parsingthread.h
 
-FORMS    += mainfen.ui
+FORMS    += mainfen.ui \
+    cdebugconsole.ui
+
+RESOURCES += \
+    resources.qrc

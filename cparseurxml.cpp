@@ -5,6 +5,15 @@ CParseurXml::CParseurXml():
 {
 }
 
+CParseurXml::~CParseurXml()
+{
+    if(mXml->isOpen())
+    {
+        mXml->close();
+    }
+    delete mXml;
+}
+
 void CParseurXml::OuvrirFichier(QString aPath)
 {
     mXml = new QFile(aPath);

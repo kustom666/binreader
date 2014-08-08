@@ -6,20 +6,32 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>640</width>
+    <height>360</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>640</width>
+    <height>360</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainFen</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/resources/icons/ineofile.png</normaloff>:/resources/icons/ineofile.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout"/>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>640</width>
      <height>25</height>
     </rect>
    </property>
@@ -32,10 +44,39 @@
       <string>Ouvrir</string>
      </property>
      <addaction name="actionDescripteur"/>
+     <addaction name="actionBinaire"/>
+    </widget>
+    <widget class="QMenu" name="menuExporter">
+     <property name="title">
+      <string>Exporter</string>
+     </property>
+     <addaction name="actionExporterBinaire"/>
+    </widget>
+    <widget class="QMenu" name="menuRecharger">
+     <property name="title">
+      <string>Recharger</string>
+     </property>
+     <addaction name="actionRechargeBinaire"/>
     </widget>
     <addaction name="menuOuvrir"/>
+    <addaction name="menuExporter"/>
+    <addaction name="menuRecharger"/>
+   </widget>
+   <widget class="QMenu" name="menuOutils">
+    <property name="title">
+     <string>Outils</string>
+    </property>
+    <addaction name="actionConsole"/>
+   </widget>
+   <widget class="QMenu" name="menuAide">
+    <property name="title">
+     <string>Aide</string>
+    </property>
+    <addaction name="actionApropos"/>
    </widget>
    <addaction name="menuFichier"/>
+   <addaction name="menuOutils"/>
+   <addaction name="menuAide"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -45,15 +86,69 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionDescripteur"/>
+   <addaction name="actionBinaire"/>
+   <addaction name="actionExporterBinaire"/>
+   <addaction name="actionRechargeBinaire"/>
+   <addaction name="actionConsole"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionDescripteur">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/icons/folder_table.png</normaloff>:/resources/icons/folder_table.png</iconset>
+   </property>
    <property name="text">
     <string>Descripteur</string>
    </property>
   </action>
+  <action name="actionBinaire">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/icons/folder_database.png</normaloff>:/resources/icons/folder_database.png</iconset>
+   </property>
+   <property name="text">
+    <string>Binaire</string>
+   </property>
+  </action>
+  <action name="actionConsole">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/icons/application_xp_terminal.png</normaloff>:/resources/icons/application_xp_terminal.png</iconset>
+   </property>
+   <property name="text">
+    <string>Console</string>
+   </property>
+  </action>
+  <action name="actionApropos">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/icons/help.png</normaloff>:/resources/icons/help.png</iconset>
+   </property>
+   <property name="text">
+    <string>A propos</string>
+   </property>
+  </action>
+  <action name="actionExporterBinaire">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/icons/database_save.png</normaloff>:/resources/icons/database_save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Binaire</string>
+   </property>
+  </action>
+  <action name="actionRechargeBinaire">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/icons/database_refresh.png</normaloff>:/resources/icons/database_refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Binaire</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

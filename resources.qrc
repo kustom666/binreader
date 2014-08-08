@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/icons/folder_table.png</file>
+        <file>resources/icons/folder_database.png</file>
+        <file>resources/icons/ineofile.png</file>
+        <file>resources/icons/application_xp_terminal.png</file>
+        <file>resources/icons/database_refresh.png</file>
+        <file>resources/icons/database_save.png</file>
+        <file>resources/icons/help.png</file>
+    </qresource>
+</RCC>

@@ -11,7 +11,9 @@
 class CParseurXml
 {
 public:
-    CParseurXml();
+    explicit CParseurXml();
+    ~CParseurXml();
+
     void OuvrirFichier(QString aPath);
 
     QList<CRegleParsage *> *ParserXml();
