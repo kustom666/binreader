@@ -41,14 +41,14 @@ QList<CChampBinaire *> *CImportExport::ParserBinaire(QList<CRegleParsage *> *aRe
                 CChampBinaire *buffChamp = parsedBack->at(i);
                 if(buffChamp->getMLabel() == ref)
                 {
-                    QDataStream ds(buffChamp->getMData());
-                    ds >> nbRepet;
+                    nbRepet = CChampBinaire::RecupInt(buffChamp);
                 }
             }
             CChampBinaire *buffBinBloc = new CChampBinaire();
             buffBinBloc->setMType("bloc");
-            buffBinBloc->setMTaille(buffR->getMEnfants()->size());
+            buffBinBloc->setMTaille(buffR->getMEnfants()->size()*nbRepet);
             buffBinBloc->setMLabel(buffR->getMNom());
+            buffBinBloc->setMNombre(buffR->getMEnfants()->size());
             parsedBack->append(buffBinBloc);
             for(int i=0; i < nbRepet; ++i)
             {
@@ -112,8 +112,9 @@ QList<CChampBinaire *> *CImportExport::ParserBloc(QList<CRegleParsage *> *aRegle
             }
             CChampBinaire *buffBinBloc = new CChampBinaire();
             buffBinBloc->setMType("bloc");
-            buffBinBloc->setMTaille(buffR->getMEnfants()->size());
+            buffBinBloc->setMTaille(buffR->getMEnfants()->size()*nbRepet);
             buffBinBloc->setMLabel(buffR->getMNom());
+            buffBinBloc->setMNombre(buffR->getMEnfants()->size());
             parsedBack->append(buffBinBloc);
             for(int i=0; i < nbRepet; ++i)
             {

@@ -22,6 +22,8 @@ public:
 
 
     void Erreur(QString aMessage);
+    void Info(QString aMessage);
+    void Warning(QString aMessage);
 private:
     Ui::CDebugConsole *ui;
     QString mErreurs;

@@ -3,20 +3,18 @@
 ParsingThread::ParsingThread(QObject *parent) :
     QThread(parent)
 {
-    mIe = NULL;
-    listeParsage = NULL;
-    mBinaires = NULL;
 }
 
 ParsingThread::~ParsingThread()
 {
 }
 
-void ParsingThread::run()
+void ParsingThread::run(CImportExport *mIe, QList<CRegleParsage *> *listeParsage ,QList<CChampBinaire *> *mBinaires)
 {
     if(mIe != NULL && listeParsage != NULL)
     {
-        emit sendParsed(mIe->ParserBinaire(listeParsage));
+        mBinaires = mIe->ParserBinaire(listeParsage);
+        emit sendParsed(mBinaires);
         mIe = NULL;
         listeParsage = NULL;
     }

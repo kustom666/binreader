@@ -16,7 +16,21 @@ CDebugConsole::~CDebugConsole()
 
 void CDebugConsole::Erreur(QString aMessage)
 {
-    QString message = "<p class=\"erreur\">[" + QDateTime::currentDateTime().toString() + "] " + aMessage + "</p>";
+    QString message = "<p class=\"erreur\">[" + QDateTime::currentDateTime().toString() + "]\t" + aMessage + "</p>";
+    mErreurs.append(message);
+    ui->textBrowser->setHtml(mErreurs);
+}
+
+void CDebugConsole::Warning(QString aMessage)
+{
+    QString message = "<p class=\"warning\">[" + QDateTime::currentDateTime().toString() + "]\t" + aMessage + "</p>";
+    mErreurs.append(message);
+    ui->textBrowser->setHtml(mErreurs);
+}
+
+void CDebugConsole::Info(QString aMessage)
+{
+    QString message = "<p class=\"info\">[" + QDateTime::currentDateTime().toString() + "]\t" + aMessage + "</p>";
     mErreurs.append(message);
     ui->textBrowser->setHtml(mErreurs);
 }

@@ -67,26 +67,34 @@ void MainFen::ConnectSignaux()
 
 void MainFen::OuvrirDescripteur()
 {
-    QString path = QFileDialog::getOpenFileName(this, "Choisir le fichier descripteur", "", "Fichiers XML : *.xml");
-    mParseurXml.OuvrirFichier(path);
-    listeParsage = mParseurXml.ParserXml();
-    ui->actionBinaire->setDisabled(false);
-//    AffichierGui();
+    QString path = QFileDialog::getOpenFileName(this, tr("Choisir le fichier descripteur"), tr(""), tr("Fichiers XML : *.xml"));
+    if(!path.isEmpty())
+    {
+        mParseurXml.OuvrirFichier(path);
+        listeParsage = mParseurXml.ParserXml();
+        ui->actionBinaire->setDisabled(false);
+    }
+    else
+    {
+        mConsoleDebug->Warning(tr("Fichier XML introuvable"));
+    }
 }
 
 void MainFen::OuvrirBinaire()
 {
-    QString path = QFileDialog::getOpenFileName(this, "Choisir le fichier binaire", "", "Tout type de fichier : *.*");
-    mImportExport->OuvrirBinaire(path);
-    mBinaires = mImportExport->ParserBinaire(listeParsage);
-    qDebug() << "Parsing Fini";
-    ui->actionExporterBinaire->setDisabled(false);
-    ui->actionRechargeBinaire->setDisabled(false);
-    AfficherGui();
-    connect(mTree, &QTreeWidget::itemClicked, this, &MainFen::ChangerEdits);
-//    mParsingThread.setMIe(mImportExport);
-//    mParsingThread.setListeParsage(listeParsage);
-//    mParsingThread.start();
+    QString path = QFileDialog::getOpenFileName(this, tr("Choisir le fichier binaire"), tr(""), tr("Tout type de fichier : *.*"));
+    if(!path.isEmpty())
+    {
+        mImportExport->OuvrirBinaire(path);
+        mParsingThread.run(mImportExport, listeParsage, mBinaires);
+        ui->actionExporterBinaire->setDisabled(false);
+        ui->actionRechargeBinaire->setDisabled(false);
+        connect(mTree, &QTreeWidget::itemClicked, this, &MainFen::ChangerEdits);
+    }
+    else
+    {
+        mConsoleDebug->Warning(tr("Fichier binaire introuvable"));
+    }
 }
 
 void MainFen::ChangerEdits(QTreeWidgetItem *item, int colonne)
@@ -103,23 +111,10 @@ void MainFen::ChangerEdits(QTreeWidgetItem *item, int colonne)
         QSpinBox *sp = (QSpinBox *) bin->getMEditeur();
         sp->setMaximum(pow(2, 8*bin->getMTaille()));
         sp->setMinimum(0);
-        int value;
-
-        if(bin->getMTaille() == 1)
-        {
-            value = 0;
-            value |= bin->getMData().data()[0];
-        }
-        else if(bin->getMTaille() == 4)
-        {
-            ds >> value;
-        }
-        else
-        {
-            mConsoleDebug->Erreur(QString("La taille de l'entier est incorrecte"));
-        }
+        sp->setEnabled(true);
+        int value = CChampBinaire::RecupInt(bin);
+        qDebug() << "Valeur : " << value;
         sp->setValue(value);
-
     }
     bin->getMEditeur()->show();
 }
@@ -129,8 +124,28 @@ void MainFen::AfficherGui()
     for(int i=0; i < mBinaires->size(); ++i)
     {
         CChampBinaire *bin = mBinaires->at(i);
-        QTreeWidgetItem *branche = new QTreeWidgetItem(mTree);
-        branche->setText(0, bin->getMLabel());
+        if(bin->getMType() == "bloc")
+        {
+            i++;
+            for(int j=0; j < bin->getMTaille()/bin->getMNombre(); ++j)
+            {
+                QTreeWidgetItem *branche = new QTreeWidgetItem(mTree);
+                branche->setText(0, bin->getMLabel());
+
+                for(int k = 0; k < bin->getMNombre(); ++k)
+                {
+                    CChampBinaire *fbin = mBinaires->at(i+j+k);
+                    QTreeWidgetItem *feuille = new QTreeWidgetItem(branche);
+                    feuille->setText(0, fbin->getMLabel());
+                }
+            }
+            i+= bin->getMTaille();
+        }
+        else
+        {
+            QTreeWidgetItem *branche = new QTreeWidgetItem(mTree);
+            branche->setText(0, bin->getMLabel());
+        }
     }
 }
 
@@ -154,6 +169,7 @@ void MainFen::HandleParsed(QList<CChampBinaire *> *aBinaires)
 {
     mBinaires = aBinaires;
     qDebug() << "Parsing Fini";
+    AfficherGui();
 }
 
 void MainFen::ViderLayout(QLayout *layout)

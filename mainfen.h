@@ -36,10 +36,10 @@ public slots:
     void OuvrirBinaire();
     void HandleParsed(QList<CChampBinaire *> *aBinaires);
     void ChangerEdits(QTreeWidgetItem *item, int colonne);
+    void AfficherGui();
 
 private:
     void ConnectSignaux();
-    void AfficherGui();
     void ClearListeParsage(QList<CRegleParsage *> *aListe);
     void ViderLayout(QLayout *layout);
 

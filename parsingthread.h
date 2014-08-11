@@ -11,19 +11,16 @@ class ParsingThread : public QThread
     Q_OBJECT
 public:
     explicit ParsingThread(QObject *parent = 0);
-    void setMIe(CImportExport *aIe) { mIe = aIe; }
-    void setListeParsage(QList<CRegleParsage *> *aListeParsage){ listeParsage = aListeParsage; }
-    void setMBinaires(QList<CChampBinaire *> *aBinaires){ mBinaires = aBinaires; }
-    void run();
+//    void setMIe(CImportExport *aIe) { mIe = aIe; }
+//    void setListeParsage(QList<CRegleParsage *> *aListeParsage){ listeParsage = aListeParsage; }
+//    void setMBinaires(QList<CChampBinaire *> *aBinaires){ mBinaires = aBinaires; }
+    void run(CImportExport *mIe, QList<CRegleParsage *> *listeParsage ,QList<CChampBinaire *> *mBinaires);
 
     ~ParsingThread();
 signals:
     void sendParsed(QList<CChampBinaire *> *aBinaires);
 
 private:
-    CImportExport *mIe;
-    QList<CChampBinaire *> *mBinaires;
-    QList<CRegleParsage *> *listeParsage;
 
 };
 

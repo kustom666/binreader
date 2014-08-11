@@ -2,6 +2,7 @@
 #define CCHAMPBINAIRE_H
 
 #include <QByteArray>
+#include <QDebug>
 #include <QList>
 #include <QString>
 #include <QWidget>
@@ -26,12 +27,18 @@ public:
     int getMTaille() const;
     void setMTaille(int value);
 
+    int getMNombre() const;
+    void setMNombre(int value);
+
+    static int RecupInt(CChampBinaire* aBin);
+
 private:
     QWidget *mEditeur;
     QString mLabel;
     QString mType;
     QByteArray mData;
     int mTaille;
+    int mNombre;
 };
 
 #endif // CCHAMPBINAIRE_H
