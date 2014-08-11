@@ -29,7 +29,19 @@
    <item>
     <widget class="QTextBrowser" name="textBrowser">
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(0, 0, 0);</string>
+      <string notr="true">background-color: rgb(0, 0, 0);
+
+p.erreur{
+	color: red;
+}
+
+p.info{
+	color: blue;
+}
+
+p.warning{
+	color: yellow;
+}</string>
      </property>
     </widget>
    </item>

@@ -5,11 +5,12 @@ CImportExport::CImportExport(QWidget *parent) :
     mOffset(0)
 {
     mParent = parent;
+    mBinaire = NULL;
 }
 
 CImportExport::~CImportExport()
 {
-    if(mBinaire->isOpen())
+    if(mBinaire != NULL && mBinaire->isOpen())
     {
         mBinaire->close();
     }
@@ -44,6 +45,11 @@ QList<CChampBinaire *> *CImportExport::ParserBinaire(QList<CRegleParsage *> *aRe
                     ds >> nbRepet;
                 }
             }
+            CChampBinaire *buffBinBloc = new CChampBinaire();
+            buffBinBloc->setMType("bloc");
+            buffBinBloc->setMTaille(buffR->getMEnfants()->size());
+            buffBinBloc->setMLabel(buffR->getMNom());
+            parsedBack->append(buffBinBloc);
             for(int i=0; i < nbRepet; ++i)
             {
                 QList<CChampBinaire *> *parsedBlock;
@@ -74,6 +80,14 @@ CChampBinaire* CImportExport::ParserInt(CRegleParsage *aRegle)
     elemParse->setMEditeur(editeurInt);
     elemParse->setMLabel(aRegle->getMNom());
     elemParse->setMType(aRegle->getMType());
+    elemParse->setMTaille(aRegle->getMTaille());
+
+//    int val;
+//    QDataStream  ds(elemParse->getMData());
+//    ds >> val;
+//    qDebug() << val;
+
+//    qDebug() << val;
     return elemParse;
 }
 
@@ -96,6 +110,11 @@ QList<CChampBinaire *> *CImportExport::ParserBloc(QList<CRegleParsage *> *aRegle
                     ds >> nbRepet;
                 }
             }
+            CChampBinaire *buffBinBloc = new CChampBinaire();
+            buffBinBloc->setMType("bloc");
+            buffBinBloc->setMTaille(buffR->getMEnfants()->size());
+            buffBinBloc->setMLabel(buffR->getMNom());
+            parsedBack->append(buffBinBloc);
             for(int i=0; i < nbRepet; ++i)
             {
                 QList<CChampBinaire *> *parsedBlock;

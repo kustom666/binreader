@@ -3,11 +3,12 @@
 CParseurXml::CParseurXml():
              mReader()
 {
+    mXml = NULL;
 }
 
 CParseurXml::~CParseurXml()
 {
-    if(mXml->isOpen())
+    if(mXml != NULL && mXml->isOpen())
     {
         mXml->close();
     }

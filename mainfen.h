@@ -1,6 +1,7 @@
 #ifndef MAINFEN_H
 #define MAINFEN_H
 
+#include <cmath>
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
@@ -16,6 +17,7 @@
 #include "cregleparsage.h"
 #include "cimportexport.h"
 #include "cdebugconsole.h"
+#include "parsingthread.h"
 
 namespace Ui {
 class MainFen;
@@ -32,11 +34,14 @@ public:
 public slots:
     void OuvrirDescripteur();
     void OuvrirBinaire();
+    void HandleParsed(QList<CChampBinaire *> *aBinaires);
+    void ChangerEdits(QTreeWidgetItem *item, int colonne);
 
 private:
     void ConnectSignaux();
     void AfficherGui();
     void ClearListeParsage(QList<CRegleParsage *> *aListe);
+    void ViderLayout(QLayout *layout);
 
 private:
     Ui::MainFen *ui;
@@ -49,7 +54,8 @@ private:
     CImportExport *mImportExport;
     CDebugConsole *mConsoleDebug;
     QList<CChampBinaire *> *mBinaires;
-
+    ParsingThread mParsingThread;
+    int mIndexRegles;
 };
 
 #endif // MAINFEN_H

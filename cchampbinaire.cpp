@@ -39,3 +39,13 @@ void CChampBinaire::setMEditeur(QWidget *value)
 {
     mEditeur = value;
 }
+int CChampBinaire::getMTaille() const
+{
+    return mTaille;
+}
+
+void CChampBinaire::setMTaille(int value)
+{
+    mTaille = value;
+}
+

@@ -23,11 +23,15 @@ public:
     QWidget *getMEditeur() const;
     void setMEditeur(QWidget *value);
 
+    int getMTaille() const;
+    void setMTaille(int value);
+
 private:
     QWidget *mEditeur;
     QString mLabel;
     QString mType;
     QByteArray mData;
+    int mTaille;
 };
 
 #endif // CCHAMPBINAIRE_H
