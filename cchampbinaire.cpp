@@ -2,6 +2,7 @@
 
 CChampBinaire::CChampBinaire()
 {
+    mEnfants = NULL;
 }
 QByteArray CChampBinaire::getMData() const
 {
@@ -84,3 +85,13 @@ int CChampBinaire::RecupInt(CChampBinaire* aBin)
     }
     return value;
 }
+QList<CChampBinaire *>* CChampBinaire::getMEnfants() const
+{
+    return mEnfants;
+}
+
+void CChampBinaire::setMEnfants(QList<CChampBinaire *> *value)
+{
+    mEnfants = value;
+}
+

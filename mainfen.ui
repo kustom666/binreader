@@ -91,6 +91,7 @@
    <addaction name="actionRechargeBinaire"/>
    <addaction name="actionConsole"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionDescripteur">
    <property name="icon">
     <iconset resource="resources.qrc">

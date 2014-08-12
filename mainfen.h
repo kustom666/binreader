@@ -42,6 +42,8 @@ private:
     void ConnectSignaux();
     void ClearListeParsage(QList<CRegleParsage *> *aListe);
     void ViderLayout(QLayout *layout);
+    void AfficherBloc(CChampBinaire *aBin, QTreeWidgetItem *aRoot);
+
 
 private:
     Ui::MainFen *ui;

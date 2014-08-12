@@ -44,24 +44,25 @@ QList<CChampBinaire *> *CImportExport::ParserBinaire(QList<CRegleParsage *> *aRe
                     nbRepet = CChampBinaire::RecupInt(buffChamp);
                 }
             }
-            CChampBinaire *buffBinBloc = new CChampBinaire();
-            buffBinBloc->setMType("bloc");
-            buffBinBloc->setMTaille(buffR->getMEnfants()->size()*nbRepet);
-            buffBinBloc->setMLabel(buffR->getMNom());
-            buffBinBloc->setMNombre(buffR->getMEnfants()->size());
-            parsedBack->append(buffBinBloc);
+
             for(int i=0; i < nbRepet; ++i)
             {
+                CChampBinaire *buffBinBloc = new CChampBinaire();
+                buffBinBloc->setMType("bloc");
+                buffBinBloc->setMTaille(buffR->getMEnfants()->size()*nbRepet);
+                buffBinBloc->setMLabel(buffR->getMNom());
+                buffBinBloc->setMNombre(nbRepet);
                 QList<CChampBinaire *> *parsedBlock;
                 parsedBlock = ParserBloc(buffR->getMEnfants());
-                parsedBack->append(*parsedBlock);
-                delete parsedBlock;
+                buffBinBloc->setMEnfants(parsedBlock);
+                parsedBack->push_back(buffBinBloc);
+
             }
         }
         else if(buffR->getMType()== "int")
         {
            CChampBinaire *buffParse = ParserInt(buffR);
-           parsedBack->append(buffParse);
+           parsedBack->push_back(buffParse);
         }
     }
     return parsedBack;
@@ -110,24 +111,24 @@ QList<CChampBinaire *> *CImportExport::ParserBloc(QList<CRegleParsage *> *aRegle
                     ds >> nbRepet;
                 }
             }
-            CChampBinaire *buffBinBloc = new CChampBinaire();
-            buffBinBloc->setMType("bloc");
-            buffBinBloc->setMTaille(buffR->getMEnfants()->size()*nbRepet);
-            buffBinBloc->setMLabel(buffR->getMNom());
-            buffBinBloc->setMNombre(buffR->getMEnfants()->size());
-            parsedBack->append(buffBinBloc);
             for(int i=0; i < nbRepet; ++i)
             {
+                CChampBinaire *buffBinBloc = new CChampBinaire();
+                buffBinBloc->setMType("bloc");
+                buffBinBloc->setMTaille(buffR->getMEnfants()->size()*nbRepet);
+                buffBinBloc->setMLabel(buffR->getMNom());
+                buffBinBloc->setMNombre(buffR->getMEnfants()->size());
                 QList<CChampBinaire *> *parsedBlock;
                 parsedBlock = ParserBloc(buffR->getMEnfants());
-                parsedBack->append(*parsedBlock);
-                delete parsedBlock;
+                buffBinBloc->setMEnfants(parsedBlock);
+                parsedBack->push_back(buffBinBloc);
             }
+
         }
         else if(buffR->getMType()== "int")
         {
            CChampBinaire *buffParse = ParserInt(buffR);
-           parsedBack->append(buffParse);
+           parsedBack->push_back(buffParse);
         }
     }
     return parsedBack;

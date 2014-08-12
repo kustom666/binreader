@@ -32,6 +32,9 @@ public:
 
     static int RecupInt(CChampBinaire* aBin);
 
+    QList<CChampBinaire *> *getMEnfants() const;
+    void setMEnfants(QList<CChampBinaire *> *value);
+
 private:
     QWidget *mEditeur;
     QString mLabel;
@@ -39,6 +42,7 @@ private:
     QByteArray mData;
     int mTaille;
     int mNombre;
+    QList<CChampBinaire *> *mEnfants;
 };
 
 #endif // CCHAMPBINAIRE_H

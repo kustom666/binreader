@@ -73,6 +73,7 @@ void MainFen::OuvrirDescripteur()
         mParseurXml.OuvrirFichier(path);
         listeParsage = mParseurXml.ParserXml();
         ui->actionBinaire->setDisabled(false);
+        ui->statusBar->showMessage(tr("Fichier de description chargé"), 3000);
     }
     else
     {
@@ -100,51 +101,108 @@ void MainFen::OuvrirBinaire()
 void MainFen::ChangerEdits(QTreeWidgetItem *item, int colonne)
 {
     ViderLayout(mMainLayout);
-    int index = mTree->indexOfTopLevelItem(item);
-    CChampBinaire *bin = mBinaires->at(index);
-    mMainLayout->insertRow(0, bin->getMLabel(), bin->getMEditeur());
-    QByteArray data = bin->getMData();
-    QDataStream ds(data);
-
-    if(bin->getMType() == "int")
+    QList<int> indexes;
+    int indexPar = 0;
+    QTreeWidgetItem *buff = item;
+    while(buff != NULL)
     {
-        QSpinBox *sp = (QSpinBox *) bin->getMEditeur();
-        sp->setMaximum(pow(2, 8*bin->getMTaille()));
-        sp->setMinimum(0);
-        sp->setEnabled(true);
-        int value = CChampBinaire::RecupInt(bin);
-        qDebug() << "Valeur : " << value;
-        sp->setValue(value);
+        if(buff->parent() != NULL)
+        {
+            int indexSub = buff->parent()->indexOfChild(buff);
+            indexes.push_back(indexSub);
+        }
+        else
+        {
+            indexPar = mTree->indexOfTopLevelItem(buff);
+        }
+        buff = buff->parent();
     }
-    bin->getMEditeur()->show();
+    qDebug() << "Index parent : " + QString::number(indexPar);
+    if(!indexes.isEmpty())
+    {
+         qDebug() << "Index enfant : " + QString::number(indexes.at(0));
+    }
+
+    qDebug() << "Taille mBinaires" + QString::number(mBinaires->size());
+    CChampBinaire *pack = mBinaires->at(indexPar);
+    if(!indexes.isEmpty())
+    {
+        if(pack->getMType() == "bloc")
+        {
+            CChampBinaire *elem = pack->getMEnfants()->at(indexes.at(0));
+            mMainLayout->insertRow(0, elem->getMLabel(), elem->getMEditeur());
+        }
+        else
+        {
+
+        }
+    }
+    else
+    {
+        if(pack->getMType() != "bloc")
+        {
+            mMainLayout->insertRow(0, pack->getMLabel(), pack->getMEditeur());
+        }
+    }
+
+//    if(index != -1)
+//    {
+//        CChampBinaire *bin = mBinaires->at(index);
+//        qDebug() << "Index : " + QString::number(index);
+//        if(bin->getMType() != "bloc")
+//        {
+//            mMainLayout->insertRow(0, bin->getMLabel(), bin->getMEditeur());
+//            QByteArray data = bin->getMData();
+//            QDataStream ds(data);
+
+//            if(bin->getMType() == "int")
+//            {
+//                QSpinBox *sp = (QSpinBox *) bin->getMEditeur();
+//                sp->setMaximum(pow(2, 8*bin->getMTaille()));
+//                sp->setEnabled(true);
+//                int value = CChampBinaire::RecupInt(bin);
+//                qDebug() << "Valeur : " << value;
+//                sp->setValue(value);
+//            }
+//            bin->getMEditeur()->show();
+//        }
+//    }
+//    else
+//    {
+//        mConsoleDebug->Erreur("Impossible de retrouver la valeur liée à l'élément " + QString::number(index));
+//    }
 }
 
 void MainFen::AfficherGui()
 {
     for(int i=0; i < mBinaires->size(); ++i)
     {
+        qDebug() << "Taille binaire affichage : " +  QString::number(mBinaires->size());
         CChampBinaire *bin = mBinaires->at(i);
         if(bin->getMType() == "bloc")
         {
-            i++;
-            for(int j=0; j < bin->getMTaille()/bin->getMNombre(); ++j)
-            {
-                QTreeWidgetItem *branche = new QTreeWidgetItem(mTree);
-                branche->setText(0, bin->getMLabel());
-
-                for(int k = 0; k < bin->getMNombre(); ++k)
-                {
-                    CChampBinaire *fbin = mBinaires->at(i+j+k);
-                    QTreeWidgetItem *feuille = new QTreeWidgetItem(branche);
-                    feuille->setText(0, fbin->getMLabel());
-                }
-            }
-            i+= bin->getMTaille();
+            AfficherBloc(bin, mTree->invisibleRootItem());
         }
         else
         {
             QTreeWidgetItem *branche = new QTreeWidgetItem(mTree);
             branche->setText(0, bin->getMLabel());
+        }
+    }
+}
+
+void MainFen::AfficherBloc(CChampBinaire *aBin, QTreeWidgetItem *aRoot)
+{
+    QTreeWidgetItem *branche = new QTreeWidgetItem(aRoot);
+    branche->setText(0, aBin->getMLabel());
+    for(int i=0; i < aBin->getMEnfants()->size(); ++i)
+    {
+        CChampBinaire *binFeuille = aBin->getMEnfants()->at(i);
+        QTreeWidgetItem *feuille = new QTreeWidgetItem(branche);
+        feuille->setText(0, binFeuille->getMLabel());
+        if(binFeuille->getMEnfants() != NULL)
+        {
+            AfficherBloc(binFeuille, feuille);
         }
     }
 }
@@ -168,7 +226,7 @@ void MainFen::ClearListeParsage(QList<CRegleParsage *> *aListe)
 void MainFen::HandleParsed(QList<CChampBinaire *> *aBinaires)
 {
     mBinaires = aBinaires;
-    qDebug() << "Parsing Fini";
+    ui->statusBar->showMessage(tr("Lecture du binaire terminée"), 3000);
     AfficherGui();
 }
 
