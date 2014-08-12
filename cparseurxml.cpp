@@ -76,7 +76,6 @@ void CParseurXml::LireElement(QList<CRegleParsage *> *aRegles)
     buffRegle->setMRefNombre(reference);
 
     aRegles->push_back(buffRegle);
-    qDebug() << balise;
     mReader.skipCurrentElement();
 }
 

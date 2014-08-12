@@ -1,10 +1,13 @@
 #ifndef CCHAMPBINAIRE_H
 #define CCHAMPBINAIRE_H
 
+#include <cmath>
 #include <QByteArray>
 #include <QDebug>
 #include <QList>
+#include <QLineEdit>
 #include <QString>
+#include <QSpinBox>
 #include <QWidget>
 
 class CChampBinaire
@@ -31,6 +34,7 @@ public:
     void setMNombre(int value);
 
     static int RecupInt(CChampBinaire* aBin);
+    static void AfficheVal(CChampBinaire *aBin);
 
     QList<CChampBinaire *> *getMEnfants() const;
     void setMEnfants(QList<CChampBinaire *> *value);

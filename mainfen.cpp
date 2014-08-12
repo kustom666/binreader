@@ -5,7 +5,8 @@ MainFen::MainFen(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainFen),
     mParseurXml(),
-    mParsingThread(this)
+    mParsingThread(this),
+    mSavedPath()
 {
     ui->setupUi(this);
     mSplitter = new QSplitter(this);
@@ -61,6 +62,9 @@ void MainFen::ConnectSignaux()
     connect(ui->actionDescripteur, &QAction::triggered, this, &MainFen::OuvrirDescripteur);
     connect(ui->actionBinaire, &QAction::triggered, this, &MainFen::OuvrirBinaire);
     connect(ui->actionConsole, &QAction::triggered, mConsoleDebug, &CDebugConsole::show);
+    connect(ui->actionRechargeBinaire, &QAction::triggered, this, &MainFen::RechargerBinaire);
+    connect(ui->actionExporterBinaire, &QAction::triggered, this, &MainFen::SauvegarderBinaire);
+
     connect(&mParsingThread, &ParsingThread::sendParsed, this, &MainFen::HandleParsed);
     connect(&mParsingThread, &ParsingThread::finished, &mParsingThread, &QObject::deleteLater);
 }
@@ -86,16 +90,33 @@ void MainFen::OuvrirBinaire()
     QString path = QFileDialog::getOpenFileName(this, tr("Choisir le fichier binaire"), tr(""), tr("Tout type de fichier : *.*"));
     if(!path.isEmpty())
     {
+        mTree->clear();
         mImportExport->OuvrirBinaire(path);
         mParsingThread.run(mImportExport, listeParsage, mBinaires);
         ui->actionExporterBinaire->setDisabled(false);
         ui->actionRechargeBinaire->setDisabled(false);
         connect(mTree, &QTreeWidget::itemClicked, this, &MainFen::ChangerEdits);
+        mSavedPath = path;
     }
     else
     {
         mConsoleDebug->Warning(tr("Fichier binaire introuvable"));
     }
+}
+
+void MainFen::SauvegarderBinaire()
+{
+    QString lPathSauvegarde = QFileDialog::getSaveFileName(this,tr("Choisir le nom du fichier"), "" , "Tout nom de fichier : *");
+    mImportExport->ExporterBinaire(lPathSauvegarde, mBinaires);
+}
+
+void MainFen::RechargerBinaire()
+{
+    mTree->clear();
+    mImportExport->OuvrirBinaire(mSavedPath);
+    mParsingThread.run(mImportExport, listeParsage, mBinaires);
+    ui->actionExporterBinaire->setDisabled(false);
+    ui->actionRechargeBinaire->setDisabled(false);
 }
 
 void MainFen::ChangerEdits(QTreeWidgetItem *item, int colonne)
@@ -117,67 +138,42 @@ void MainFen::ChangerEdits(QTreeWidgetItem *item, int colonne)
         }
         buff = buff->parent();
     }
-    qDebug() << "Index parent : " + QString::number(indexPar);
-    if(!indexes.isEmpty())
-    {
-         qDebug() << "Index enfant : " + QString::number(indexes.at(0));
-    }
 
-    qDebug() << "Taille mBinaires" + QString::number(mBinaires->size());
     CChampBinaire *pack = mBinaires->at(indexPar);
     if(!indexes.isEmpty())
     {
-        if(pack->getMType() == "bloc")
+        if(pack->getMType() == "bloc") // Enfants d'un bloc
         {
             CChampBinaire *elem = pack->getMEnfants()->at(indexes.at(0));
             mMainLayout->insertRow(0, elem->getMLabel(), elem->getMEditeur());
-        }
-        else
-        {
-
+            CChampBinaire::AfficheVal(elem);
         }
     }
     else
     {
-        if(pack->getMType() != "bloc")
+        if(pack->getMType() != "bloc") // Branches racine sans enfants
         {
             mMainLayout->insertRow(0, pack->getMLabel(), pack->getMEditeur());
+            pack->getMEditeur()->setVisible(true);
+            CChampBinaire::AfficheVal(pack);
+        }
+        else // Blocs
+        {
+            for(int i=pack->getMEnfants()->size()-1; i >= 0; --i)
+            {
+                CChampBinaire *enfant = pack->getMEnfants()->at(i);
+                mMainLayout->insertRow(0, enfant->getMLabel(), enfant->getMEditeur());
+                enfant->getMEditeur()->setVisible(true);
+                CChampBinaire::AfficheVal(enfant);
+            }
         }
     }
-
-//    if(index != -1)
-//    {
-//        CChampBinaire *bin = mBinaires->at(index);
-//        qDebug() << "Index : " + QString::number(index);
-//        if(bin->getMType() != "bloc")
-//        {
-//            mMainLayout->insertRow(0, bin->getMLabel(), bin->getMEditeur());
-//            QByteArray data = bin->getMData();
-//            QDataStream ds(data);
-
-//            if(bin->getMType() == "int")
-//            {
-//                QSpinBox *sp = (QSpinBox *) bin->getMEditeur();
-//                sp->setMaximum(pow(2, 8*bin->getMTaille()));
-//                sp->setEnabled(true);
-//                int value = CChampBinaire::RecupInt(bin);
-//                qDebug() << "Valeur : " << value;
-//                sp->setValue(value);
-//            }
-//            bin->getMEditeur()->show();
-//        }
-//    }
-//    else
-//    {
-//        mConsoleDebug->Erreur("Impossible de retrouver la valeur liée à l'élément " + QString::number(index));
-//    }
 }
 
 void MainFen::AfficherGui()
 {
     for(int i=0; i < mBinaires->size(); ++i)
     {
-        qDebug() << "Taille binaire affichage : " +  QString::number(mBinaires->size());
         CChampBinaire *bin = mBinaires->at(i);
         if(bin->getMType() == "bloc")
         {

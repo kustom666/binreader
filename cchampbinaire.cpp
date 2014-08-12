@@ -4,6 +4,44 @@ CChampBinaire::CChampBinaire()
 {
     mEnfants = NULL;
 }
+
+int CChampBinaire::RecupInt(CChampBinaire* aBin)
+{
+    QDataStream ds(aBin->getMData());
+    int value = 0;
+
+    if(aBin->getMType() == "int")
+    {
+        if(aBin->getMTaille() == 1)
+        {
+            value |= (unsigned char)aBin->getMData()[0];
+        }
+        else if(aBin->getMTaille() == 4)
+        {
+            ds >> value;
+        }
+    }
+    return value;
+}
+
+void CChampBinaire::AfficheVal(CChampBinaire *aBin)
+{
+    if(aBin->getMType() == "int")
+    {
+        QSpinBox *edit = (QSpinBox *) aBin->getMEditeur();
+        edit->setMaximum(pow(2.0f, 8*aBin->getMTaille())-1);
+        edit->setValue(CChampBinaire::RecupInt(aBin));
+        edit->setVisible(true);
+//                connect(edit, &QSpinBox::valueChange)
+    }
+    else if(aBin->getMType() == "texte")
+    {
+        QLineEdit *edit = (QLineEdit *) aBin->getMEditeur();
+        edit->setText("placeholder");
+        edit->setVisible(true);
+    }
+}
+
 QByteArray CChampBinaire::getMData() const
 {
     return mData;
@@ -59,32 +97,6 @@ void CChampBinaire::setMNombre(int value)
     mNombre = value;
 }
 
-int CChampBinaire::RecupInt(CChampBinaire* aBin)
-{
-    QDataStream ds(aBin->getMData());
-    int value = 0;
-
-    if(aBin->getMType() == "int")
-    {
-        if(aBin->getMTaille() == 1)
-        {
-            value |= aBin->getMData()[0];
-        }
-        else if(aBin->getMTaille() == 4)
-        {
-            ds >> value;
-        }
-        else
-        {
-            //mConsoleDebug->Erreur(tr("La taille de l'entier est incorrecte"));
-        }
-    }
-    else
-    {
-        //mConsoleDebug->Erreur(tr("Tentative de lecture d'un entier dans un champ d'un autre type"));
-    }
-    return value;
-}
 QList<CChampBinaire *>* CChampBinaire::getMEnfants() const
 {
     return mEnfants;

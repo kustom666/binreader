@@ -37,6 +37,8 @@ public slots:
     void HandleParsed(QList<CChampBinaire *> *aBinaires);
     void ChangerEdits(QTreeWidgetItem *item, int colonne);
     void AfficherGui();
+    void RechargerBinaire();
+    void SauvegarderBinaire();
 
 private:
     void ConnectSignaux();
@@ -58,6 +60,8 @@ private:
     QList<CChampBinaire *> *mBinaires;
     ParsingThread mParsingThread;
     int mIndexRegles;
+    QString mSavedPath;
+
 };
 
 #endif // MAINFEN_H

@@ -133,3 +133,45 @@ QList<CChampBinaire *> *CImportExport::ParserBloc(QList<CRegleParsage *> *aRegle
     }
     return parsedBack;
 }
+
+bool CImportExport::ExporterBinaire(QString aPath, QList<CChampBinaire *> *aExporter)
+{
+    QFile fExport(aPath);
+    bool success = true;
+    if(fExport.open(QIODevice::WriteOnly))
+    {
+        for(int i = 0; i < aExporter->size(); ++i)
+        {
+            CChampBinaire *enfant = aExporter->at(i);
+            if(enfant->getMType() == "bloc")
+            {
+                ExporterBloc(enfant, &fExport);
+            }
+            else
+            {
+                fExport.write(enfant->getMData());
+            }
+        }
+    }
+    else
+    {
+        success = false;
+    }
+    return success;
+}
+
+bool CImportExport::ExporterBloc(CChampBinaire *aExporter, QFile *aFExport)
+{
+    for(int i=0; i < aExporter->getMEnfants()->size(); ++i)
+    {
+        CChampBinaire *enfant = aExporter->getMEnfants()->at(i);
+        if(enfant->getMType() == "bloc")
+        {
+            ExporterBloc(enfant, aFExport);
+        }
+        else
+        {
+            aFExport->write(enfant->getMData());
+        }
+    }
+}

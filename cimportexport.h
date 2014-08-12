@@ -23,6 +23,8 @@ public:
     QList<CChampBinaire *> *ParserBinaire(QList<CRegleParsage *> *aRegles);
     CChampBinaire *ParserInt(CRegleParsage *aRegle);
     QList<CChampBinaire *> * ParserBloc(QList<CRegleParsage *> *aRegle);
+    bool ExporterBinaire(QString aPath, QList<CChampBinaire *> *aExporter);
+    bool ExporterBloc(CChampBinaire *aExporter, QFile *aFExport);
 
 private:
     QFile *mBinaire;
