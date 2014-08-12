@@ -16,9 +16,27 @@ int CChampBinaire::RecupInt(CChampBinaire* aBin)
         {
             value |= (unsigned char)aBin->getMData()[0];
         }
+        else if(aBin->getMTaille() == 2)
+        {
+            value |= (unsigned char)aBin->getMData()[0] << 8;
+            value |= (unsigned char)aBin->getMData()[1];
+        }
+        else if(aBin->getMTaille() == 3)
+        {
+            value |= (unsigned char)aBin->getMData()[0] << 16;
+            value |= (unsigned char)aBin->getMData()[1] << 8;
+            value |= (unsigned char)aBin->getMData()[2];
+        }
         else if(aBin->getMTaille() == 4)
         {
             ds >> value;
+        }
+        else if(aBin->getMTaille() == 6)
+        {
+            value |= (unsigned char)aBin->getMData()[0] << 24;
+            value |= (unsigned char)aBin->getMData()[1] << 16;
+            value |= (unsigned char)aBin->getMData()[2] << 8;
+            value |= (unsigned char)aBin->getMData()[3];
         }
     }
     return value;
